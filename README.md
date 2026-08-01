@@ -29,10 +29,6 @@ The database is stored as a single file, **`mydb.db`**, in the root of the proje
 
 On first run, `main.py` automatically creates the `tasks` table (if it doesn't already exist) and seeds it with a few sample tasks.
 
-## Database Viewer Screenshot
-
-![Project Screenshot](Screenshot 2026-08-02 at 3.48.57 AM.png)
-
 ## Example SQL Query
 
 Here's an example of a query executed against the `tasks` table (used internally by the `/tasks` endpoint):

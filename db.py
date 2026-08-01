@@ -1,5 +1,15 @@
 import sqlite3
-from typing import Union
+from typing import Union, TypedDict, Optional
+
+class Tasks(TypedDict):
+    id: int
+    title: str
+    done: bool
+
+class updateTasks(TypedDict):
+    id: int
+    title: Optional[str]
+    done: Optional [bool]
 def getdb():
     conn=sqlite3.connect('mydb.db',check_same_thread=False)
     cur=conn.cursor()
@@ -38,3 +48,15 @@ def retrieve(conn,cur,id):
     if len(result)==0:
         return {"404":{"Error":"Not found"}}
     return {"200":{"id": result[0], "title": result[1], "done": result[2]}}
+def update(conn,cur,task: updateTasks):
+    cur.execute("UPDATE tasks SET title=?, done=? WHERE id=?",(task['title'],task['done'],task['id']))
+    conn.commit()
+    return {"200":task}
+def delete(conn,cur,id):
+    response=retrieve(conn,cur,id)
+    if "200" in response:
+        cur.execute("DELETE FROM tasks WHERE id=?",(int(id),))
+        conn.commit()
+        return {"204":f"Task with id {id} has been deleted successfully"}
+    else:
+        return response

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from typing import TypedDict
+from typing import TypedDict, Optional
 import db
 app = FastAPI()
 
@@ -7,6 +7,12 @@ class Tasks(TypedDict):
     id: int
     title: str
     done: bool
+
+class updateTasks(TypedDict):
+    id: int
+    title: Optional[str]
+    done: Optional [bool]
+
 tasks=[
     Tasks(id=1,title='solve homework',done=False),
     Tasks(id=2,title='get groceries', done=True),
@@ -33,18 +39,8 @@ def create_task(task: Tasks):
     insertion=db.insert_data(conn,cur,tuple_task)
     return insertion
 @app.put("/tasks/{req_id}")
-def update_task(req_id: int, title: str, done: bool):
-    for task in tasks:
-        if task.get('id')==req_id:
-            task['title']=title
-            task['done']=done
-            return {"200":task}
-    return {"Error 404": f"Task with id: {req_id} does not exist"}
-
+def update_task(task: updateTasks):
+    return db.update(conn,cur,task)
 @app.delete("/tasks/{req_id}")
 def del_task(req_id: int):
-    for task in tasks:
-        if task['id']==req_id:
-            del tasks[tasks.index(task)]
-            return {"204":f"Task wit id {req_id} has been deleted"}
-    return {"Error 404": f"Task with id: {req_id} does not exist"}
+    return db.delete(conn,cur,req_id)

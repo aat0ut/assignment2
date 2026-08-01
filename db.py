@@ -33,7 +33,7 @@ def retrieve_all(conn,cur):
         data.append({"id":result[0],"title":result[1],"done":result[2]})
     return data
 def retrieve(conn,cur,id):
-    cur.execute('SELECT * FROM tasks WHERE id=?',id)
+    cur.execute('SELECT * FROM tasks WHERE id=?',(int(id),))
     result=cur.fetchone()
     if len(result)==0:
         return {"404":{"Error":"Not found"}}

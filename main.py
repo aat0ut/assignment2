@@ -29,11 +29,9 @@ def return_task(req_id: int):
     return db.retrieve(conn,cur,req_id)
 @app.post("/tasks/")
 def create_task(task: Tasks):
-    if task:
-        tasks.append(task)
-        return {"200":{'id': task['id'], 'title': task['title'], 'done': task['done']}}
-    else:
-        return {"404":"Invalid ID"}
+    tuple_task=(task['id'],task['title'],task['done'])
+    insertion=db.insert_data(conn,cur,tuple_task)
+    return insertion
 @app.put("/tasks/{req_id}")
 def update_task(req_id: int, title: str, done: bool):
     for task in tasks:

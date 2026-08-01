@@ -20,28 +20,13 @@ data=db.retrieve_all(conn,cur)
 
 if len(data)==0:
     db.insert_data(conn,cur,tasks_tuples)
-@app.get('/sql/')
-def return_data():
+@app.get('/tasks')
+def return_tasks():
     retrieved=db.retrieve_all(conn,cur)
     return {"200":retrieved}
-@app.get("/")
-def return_details():
-    return { "name": "Task API", "version": "1.0", "endpoints": ["/tasks"] }
-@app.get("/tasks")
-def return_tasks():
-    return {"200":tasks}
-
 @app.get("/tasks/{req_id}")
-def return_task_id(req_id: int):
-    if req_id is None or req_id not in (task.get('id') for task in tasks):
-        return { "ERROR CODE 404": f"Task {req_id} not found" }
-    else:
-        return {"200":(task for task in tasks if task["id"]==req_id)}
-@app.get("/health")
-def return_health():
-    return {"200":"read",'status':"ok"}
-
-# No need for explicit validation since Tasks enforces not null values
+def return_task(req_id: int):
+    return db.retrieve(conn,cur,req_id)
 @app.post("/tasks/")
 def create_task(task: Tasks):
     if task:

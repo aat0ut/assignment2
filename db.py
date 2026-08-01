@@ -35,4 +35,6 @@ def retrieve_all(conn,cur):
 def retrieve(conn,cur,id):
     cur.execute('SELECT * FROM tasks WHERE id=?',id)
     result=cur.fetchone()
-    return {"id":result[0],"title":result[1],"done":result[2]}
+    if len(result)==0:
+        return {"404":{"Error":"Not found"}}
+    return {"200":{"id": result[0], "title": result[1], "done": result[2]}}
